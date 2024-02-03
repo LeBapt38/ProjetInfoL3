@@ -2,7 +2,7 @@
 #define CTE_BuildNN
 
 #include <stdlib.h>
-#include "BuildNN.h++"
+#include "BuildNN.hpp"
 
 #endif
 using namespace std;
@@ -25,7 +25,7 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     return newLayer;
 }
 
-void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double)){
+void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
     layer* newLayer = buildLayer(nbNeur, g, dg); // crée la nouvelle couche
     // met à jour toutes les nouvelles adresses
     if(NN.nbLayer == 0){
@@ -43,10 +43,34 @@ void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double)){
             (oldLayer -> W)[i] = (double*)malloc((oldLayer -> nbNeurons));
             (oldLayer -> b)[i] = 0;
             for(int j = 0; j < (oldLayer -> nbNeurons); j++){
-                (oldLayer -> W)[i][j] = 0;
+                (oldLayer -> W)[i][j] = random(oldLayer -> nbNeurons, newLayer -> nbNeurons, g);
             }
         }
     }
     NN.nbLayer++;
+}
+
+void fullyConnected(network NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
+    for(int i = 0; i < nbLayer; i++){
+        addLayer(NN, nbNeuron[i], g, dg, random);
+    }
+}
+
+void destroyNN(network NN){
+    layer* LL = NN.input;
+    layer* L;
+    //traite les N-1 couches initialiser avec leur W et b
+    for (int i = 1; i < NN.nbLayer; i++){
+        L = LL;
+        LL = L -> next;
+        free(L -> b);
+        for(int j = 0; j < LL-> nbNeurons; j++){
+            free((L -> W)[j]);
+        }
+        free(L -> W);
+        free(L -> Neurons);
+    }
+    // Libère le dernier tableau de neuronne
+    free(LL -> Neurons);
 }
 

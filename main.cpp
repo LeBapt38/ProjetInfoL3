@@ -1,15 +1,11 @@
-#ifndef CTE_Main
-#define CTE_Main
-
 #include <iostream>
-#include "NN_library\BuildNN.h++"
-
-#endif
+#include "NN_library\UseNN.hpp"
 
 using namespace std;
 
 
 int main(){
-    cout << "Hello world" << endl;
+    cout << "hello" << endl;
+    double a = equiproba(2, 3, Relu);
     return 0;
 }

@@ -1,4 +1,7 @@
-#include "ActivationFun.h++"
+
+#include "ActivationFun.hpp"
+#include "Random.hpp"
+
 
 
 // Sructure contenant la forme de base d'un neuronne.
@@ -31,4 +34,10 @@ typedef struct {
 layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double));
 
 // Fonction ajoutant une nouvelle couche à la fin du réseau.
-void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double));
+void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int));
+
+// Construit ou ajoute un réseau de neuronne complétement connecter.
+void fullyConnected(network NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double)));
+
+// Libère la place mémoire prise par les variables définit à la main
+void destroyNN(network NN);

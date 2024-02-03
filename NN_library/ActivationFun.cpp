@@ -1,4 +1,4 @@
-#include "ActivationFun.h++"
+#include "ActivationFun.hpp"
 
 double Relu (double x){
     double y = 0;

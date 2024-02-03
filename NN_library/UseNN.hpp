@@ -1,4 +1,4 @@
-#include "BuildNN.h++"
+#include "BuildNN.hpp"
 
 
 void forward1Layer (layer* previous, layer* next);
