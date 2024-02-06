@@ -29,6 +29,7 @@ A modifié pour prendre en colmpte un réseau convolutif.
  Lors de la définition de W, *W[i][j]* correspond au poid de la liaison entre le neuronne j de la couche précédente vers le neuronne i de la couche suivante.
 
 ### Fichier Random
+Penser à l'adapter pour des fonctions random de Linux.
 Contient les fonctions permettant d'initialiser le poids de manière aléatoire. La fonction pour une répartition équiprobable suivant les lignes directrices de [1] déjà codé. 
 Potentiellement rajouter celle pour une distribution gaussienne.
 
@@ -37,3 +38,10 @@ Contient les différentes fonctions d'activation ainsi que leur dérivées. Pour
 
 ### Fichier UseNN
 Contient les fonctions nécessaires pour utiliser le réseau de neuronne.
+
+### Fichier TeachNN
+Contient les fonctions permettant de calculer l'erreur quadratique moyenne ainsi que celle permettant de modifier les poids pour apprendre.
+
+
+## Bibliographie
+[1] _Deep learning for physics research_ de Martin Erdmann, Jonas Glombitza, Gregor Kasieczka, Uwe Klemradt.

@@ -34,10 +34,10 @@ typedef struct {
 layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double));
 
 // Fonction ajoutant une nouvelle couche à la fin du réseau.
-void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int));
+void addLayer(network* NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double)));
 
 // Construit ou ajoute un réseau de neuronne complétement connecter.
-void fullyConnected(network NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double)));
+void fullyConnected(network* NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double)));
 
 // Libère la place mémoire prise par les variables définit à la main
-void destroyNN(network NN);
+void destroyNN(network* NN);

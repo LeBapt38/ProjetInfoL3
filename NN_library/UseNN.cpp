@@ -19,15 +19,15 @@ void forward1Layer (layer* previous, layer* next){
     }
 }
 
-void forwardPass (network NN, double* in, double* out){
+void forwardPass (network* NN, double* in, double* out){
     layer* past = NULL;
-    layer* future = NN.input;
+    layer* future = NN->input;
     // Rentre l'entrée dans la première couche
     for(int i = 0; i < (future -> nbNeurons); i++){
         (future -> Neurons)[i].y = in[i];
     }
     // Passe les couches une par une
-    for(int i = 0; i < NN.nbLayer -1; i++){
+    for(int i = 0; i < NN->nbLayer -1; i++){
         past = future;
         future = past -> next;
         forward1Layer(past, future);

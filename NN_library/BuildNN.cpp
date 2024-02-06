@@ -8,7 +8,7 @@
 using namespace std;
 
 layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
-    layer* newLayer;
+    layer* newLayer = (layer*)malloc(sizeof(layer));
     newLayer -> next = NULL;
     newLayer -> previous = NULL;
     newLayer -> W = NULL;
@@ -16,7 +16,7 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     newLayer -> nbNeurons = nbNeur;
     newLayer -> Neurons = (neuron*)malloc(nbNeur*sizeof(neuron));
     //initialise les neurones à 0 avec la fonction d'activation choisie pour la couche.
-    for(int i = 0; i<nbNeur; i++){
+    for(int i = 0; i < nbNeur; i++){
         (newLayer -> Neurons) [i].y =0;
         (newLayer -> Neurons) [i].dLdy = 0;
         (newLayer -> Neurons) [i].activ = g;
@@ -25,17 +25,17 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     return newLayer;
 }
 
-void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
+void addLayer(network* NN, int nbNeur, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
     layer* newLayer = buildLayer(nbNeur, g, dg); // crée la nouvelle couche
     // met à jour toutes les nouvelles adresses
-    if(NN.nbLayer == 0){
-        NN.input = newLayer;
-        NN.output = newLayer;
+    if(NN->nbLayer == 0){
+        NN->input = newLayer;
+        NN->output = newLayer;
     }else{
-        layer* oldLayer = NN.output;
+        layer* oldLayer = NN->output;
         oldLayer -> next = newLayer;
-        newLayer -> previous = NN.output;
-        NN.output = newLayer;
+        newLayer -> previous = NN->output;
+        NN->output = newLayer;
         // définie W et b entre les deux couches
         oldLayer -> b = (double*)malloc((newLayer->nbNeurons) * sizeof(double));
         oldLayer -> W = (double**)malloc((newLayer->nbNeurons) * sizeof(double));
@@ -47,20 +47,20 @@ void addLayer(network NN, int nbNeur, double(*g)(double), double(*dg)(double), d
             }
         }
     }
-    NN.nbLayer++;
+    NN->nbLayer++;
 }
 
-void fullyConnected(network NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
+void fullyConnected(network* NN, int nbLayer, int* nbNeuron, double(*g)(double), double(*dg)(double), double (*random)(int, int, double(*g)(double))){
     for(int i = 0; i < nbLayer; i++){
         addLayer(NN, nbNeuron[i], g, dg, random);
     }
 }
 
-void destroyNN(network NN){
-    layer* LL = NN.input;
+void destroyNN(network* NN){
+    layer* LL = NN->input;
     layer* L;
     //traite les N-1 couches initialiser avec leur W et b
-    for (int i = 1; i < NN.nbLayer; i++){
+    for (int i = 1; i < NN->nbLayer; i++){
         L = LL;
         LL = L -> next;
         free(L -> b);
