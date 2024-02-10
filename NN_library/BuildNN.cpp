@@ -19,6 +19,7 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     for(int i = 0; i < nbNeur; i++){
         (newLayer -> Neurons) [i].y =0;
         (newLayer -> Neurons) [i].dLdy = 0;
+        (newLayer -> Neurons) [i].ydLdy = 0;
         (newLayer -> Neurons) [i].activ = g;
         (newLayer -> Neurons) [i].dActiv = dg;
     }

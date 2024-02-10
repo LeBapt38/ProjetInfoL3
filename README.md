@@ -41,6 +41,13 @@ Contient les fonctions nécessaires pour utiliser le réseau de neuronne.
 
 ### Fichier TeachNN
 Contient les fonctions permettant de calculer l'erreur quadratique moyenne ainsi que celle permettant de modifier les poids pour apprendre.
+Lors de la remonter de gradient, on a besoin de garder en mémoire dLdy pour retrouver la dérivé pour b et ydLdy pour retrouver la dérivé des W.
+
+La fonction backAllNN devra être modifié ainsi que de nombreuse autre pour prendre en compte des dérivées premières. Puis trick comme Euler pour des dérivées d'ordres plus important?
+
+batch[i][0] correspond à l'entrée pour la i-eme valeur du batch alors que batch[i][1] est la sortie tabulée.
+
+trainNN0 est une première version de l'aprentissage trè basique. L'idée est d'entrainer le réseau de neuronne avec une vitesse d'apprentissage constante. Le choix de cette constante devient alors crucial; D'autres méthodes plus précise pourront être ajouter plus tard.
 
 
 ## Bibliographie

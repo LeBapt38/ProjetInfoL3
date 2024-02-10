@@ -7,7 +7,9 @@
 // Sructure contenant la forme de base d'un neuronne.
 typedef struct{
     double y;
-    double dLdy;
+    double dL; //gardera la valeur en cours lors de la remonté
+    double dLdy; //sera mis à jour en continus pour avoir l'espérance à la fin
+    double ydLdy; // Outils pour calculer dW
     double (*activ)(double);
     double (*dActiv)(double);
 }neuron;
