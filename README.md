@@ -21,6 +21,10 @@
  5. De donner une solution pour l'affichage graphique.
 
  ## Fonctionnement des fonctions
+ ### Fichier main
+ L'objectif de ce premier exemple est de reproduire la fonction cosinus à partir d'une base de donnée de valeurs. Pour cela, un NN prenant en argument x et sortant une valeur avec 3 couche caché de 3 neuronnes sera considéré. Les fonctions sont choisie au plus simple : 
+ - Relu pour l'activation
+ - Equiproba pour l'initialisation.
 
  ### Fichier BuildNN
 Fichier contenant les fonctions permettant de construire le réseau de neuronne couche par couche ou de manière automatisé pour un réseau complètement connecté. 
