@@ -31,18 +31,23 @@ double testBatch(network* NN, int sizeBatch, double*** batch){
 void back1Layer(layer* prev, layer* next){
     int N = (prev -> nbNeurons);
     int n = (next->nbNeurons);
+    // Mise à jour dérivé de L par rapport au poid
+    for(int i = 0; i < N; i++){
+        for(int j = 0; j < n; j++){
+            (prev->b)[j].dLdval += (next->Neurons)[j].dL;
+            (prev->W)[j][i].dLdval += (next->Neurons)[j].dL * (prev->Neurons)[i].activ((prev->Neurons)[i].y); //p3 samsung note
+        }
+    }
     // Calcul la dérivé partielle neuronne par neuronne.
     for (int i = 0; i < N; i++){
         double dL = 0;
         // Ajoute la contribution au gradient de chaque neuronne de la couche suivante
         for(int j = 0; j < n; j++){
-            dL += (prev->W)[j][i] * (next->Neurons)[j].dL;
+            dL += (prev->W)[j][i].val * (next->Neurons)[j].dL;
         }
         //prends en compte l'influence de la fonction d'activation
         dL *= (prev->Neurons)[i].dActiv((prev->Neurons)[i].y);
-        (prev->Neurons)[i].dLdy += dL;
-        (prev->Neurons)[i].ydLdy += (prev->Neurons)[i].y * dL;
-        (next -> Neurons)[i].dL = dL;
+        (prev -> Neurons)[i].dL = dL;
     }
 }
  
@@ -56,12 +61,11 @@ double backAllNN(network* NN, double* in, double* outTab){
     // Calcul la dérivé pour la première couche
     for(int i = 0; i < (prev->nbNeurons); i++){
         double dL = 2 * out[i] * (out[i] - outTab[i]);
-        (prev->Neurons)[i].dLdy += dL;
         (prev -> Neurons)[i].dL = dL;
     }
     free(out);
-    // Remonte tout le réseau couche par couche (n-2 intervals car input n'a pas à être traité)
-    for(int k = 1; k < (NN -> nbLayer)-1; k++){
+    // Remonte tout le réseau couche par couche (n-1 intervals car output n'a pas à être traité)
+    for(int k = 1; k < (NN -> nbLayer); k++){
         next = prev;
         prev = (next->previous);
         back1Layer(prev, next);
@@ -78,9 +82,12 @@ double backAndForthBatch(network* NN, int sizeBatch, double*** batch){
     layer* Lay = NN -> output;
     // Permet d'obtenir l'espérance et pas la somme
     for(int k = 1; k < NN -> nbLayer; k++){
+        Lay = Lay -> previous;
         for(int i = 0; i < Lay->nbNeurons; i++){
-            (Lay->Neurons)[i].dLdy /= sizeBatch;
-            (Lay->Neurons)[i].ydLdy /= sizeBatch;
+            for(int j = 0; j < Lay->next->nbNeurons; j++){
+                (Lay->b)[j].dLdval /= sizeBatch;
+                (Lay->W)[j][i].dLdval /= sizeBatch;
+            }
         }
     }
     L /= sizeBatch;
@@ -93,11 +100,13 @@ void updateWeightCte(network* NN, double alpha){
     for(int k = 1; k < (NN -> nbLayer); k++){
         next = prev;
         prev = (next->previous);
+        // Mise à jour des poids et remise à zéro des dLdval pour le prochain passage
         for (int i = 0; i < next->nbNeurons; i++){
-            (prev -> b)[i] -= alpha * (next->Neurons)[i].dLdy;
+            (prev -> b)[i].val -= alpha * (prev -> b)[i].dLdval;
+            (prev -> b)[i].dLdval = 0;
             for(int j = 0; j < prev -> nbNeurons; j++){
-                double x = ((next -> Neurons)[i].ydLdy - (prev -> b)[i] * (next -> Neurons)[i].dLdy);
-                (prev -> W)[i][j] = (alpha / (prev -> W)[i][j]) * x;
+                (prev -> W)[i][j].val -= alpha * (prev -> W)[i][j].dLdval;
+                (prev -> W)[i][j].dLdval = 0;
             }
         }
     }

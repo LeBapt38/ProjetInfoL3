@@ -1,11 +1,12 @@
 #include <iostream>
-#include "NN_library\TeachNN.hpp"
+#include "NN_library/TeachNN.hpp"
 #include <math.h>
-#include <bibli_fonction.h>
+#include <bibli_fonctions.h>
 #include <fstream>
 
 using namespace std;
 int nbPointTest = 100;
+int nbPassage = 10;
 
 double*** createBatch();
 double*** createTest();
@@ -15,25 +16,27 @@ int main(){
     // Création du réseau
     network NN; 
     NN.nbLayer = 0;
-    int nbHiddenLayer = 3;
+    int nbHiddenLayer = 2;
     int* nbNeuron = (int*)malloc(nbHiddenLayer*sizeof(int));
     for(int i = 0; i < nbHiddenLayer; i++){
-        nbNeuron[i] = 3;
+        nbNeuron[i] = 100;
     }
     addLayer(&NN, 1, Relu, dRelu, equiproba);
     fullyConnected(&NN, nbHiddenLayer, nbNeuron, Relu, dRelu, equiproba);
     addLayer(&NN, 1, Relu, dRelu, equiproba);
 
     // Apprentissage
-    double * LBatch = (double*)malloc(100*sizeof(double));
-    double * LTest = (double*)malloc(100*sizeof(double));
+    double * LBatch = (double*)malloc(1000*sizeof(double));
+    double * LTest = (double*)malloc(1000*sizeof(double));
     double*** Batch = createBatch();
     double*** Test = createTest();
-    for(int i = 0; i < 100; i++){
-        trainNN0(&NN, nbPointTest, Batch, 0.0001, 100);
+    for(int i = 0; i < 1000; i++){
+        trainNN0(&NN, nbPointTest, Batch, 0.0001, nbPassage);
         LBatch[i] = testBatch(&NN, nbPointTest, Batch);
         LTest[i] = testBatch(&NN, nbPointTest, Test);
-        cout << LBatch[i] << "   " << LTest[i] << endl;
+        cout << LBatch[i] << "   " << LTest[i] << "  "
+        << (NN.output -> previous -> b)[0].val << "  "
+        << (NN.output -> previous -> W)[0][0].val << endl;
     }
 
     // Affichage du cos
@@ -53,7 +56,6 @@ int main(){
         <<"y = A[:,1]\n"
 		<<"plot(x,y)\n";
 	make_plot_py(pyth);
-	return 0;
 
     // Libérer la place allouer dynamiquement
     destroyNN(&NN);
