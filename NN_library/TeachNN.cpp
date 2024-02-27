@@ -31,13 +31,6 @@ double testBatch(network* NN, int sizeBatch, double*** batch){
 void back1Layer(layer* prev, layer* next){
     int N = (prev -> nbNeurons);
     int n = (next->nbNeurons);
-    // Mise à jour dérivé de L par rapport au poid
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < n; j++){
-            (prev->b)[j].dLdval += (next->Neurons)[j].dL;
-            (prev->W)[j][i].dLdval += (next->Neurons)[j].dL * (prev->Neurons)[i].activ((prev->Neurons)[i].y); //p3 samsung note
-        }
-    }
     // Calcul la dérivé partielle neuronne par neuronne.
     for (int i = 0; i < N; i++){
         double dL = 0;
@@ -48,6 +41,13 @@ void back1Layer(layer* prev, layer* next){
         //prends en compte l'influence de la fonction d'activation
         dL *= (prev->Neurons)[i].dActiv((prev->Neurons)[i].y);
         (prev -> Neurons)[i].dL = dL;
+    }
+    // Mise à jour dérivé de L par rapport au poid
+    for(int j = 0; j < n; j++){
+        (prev->b)[j].dLdval += (next->Neurons)[j].dL;
+        for(int i = 0; i < N; i++){
+            (prev->W)[j][i].dLdval += (next->Neurons)[j].dL * (prev->Neurons)[i].activ((prev->Neurons)[i].y); //p3 samsung note
+        }
     }
 }
  
@@ -60,7 +60,7 @@ double backAllNN(network* NN, double* in, double* outTab){
     double L = MSE(prev->nbNeurons, out, outTab);
     // Calcul la dérivé pour la première couche
     for(int i = 0; i < (prev->nbNeurons); i++){
-        double dL = 2 * out[i] * (out[i] - outTab[i]);
+        double dL = 2 * (out[i] - outTab[i]);
         (prev -> Neurons)[i].dL = dL;
     }
     free(out);
@@ -83,9 +83,9 @@ double backAndForthBatch(network* NN, int sizeBatch, double*** batch){
     // Permet d'obtenir l'espérance et pas la somme
     for(int k = 1; k < NN -> nbLayer; k++){
         Lay = Lay -> previous;
-        for(int i = 0; i < Lay->nbNeurons; i++){
-            for(int j = 0; j < Lay->next->nbNeurons; j++){
-                (Lay->b)[j].dLdval /= sizeBatch;
+        for(int j = 0; j < Lay->next->nbNeurons; j++){
+            (Lay->b)[j].dLdval /= sizeBatch;
+            for(int i = 0; i < Lay->nbNeurons; i++){
                 (Lay->W)[j][i].dLdval /= sizeBatch;
             }
         }

@@ -16,10 +16,10 @@ int main(){
     // Création du réseau
     network NN; 
     NN.nbLayer = 0;
-    int nbHiddenLayer = 2;
+    int nbHiddenLayer = 3;
     int* nbNeuron = (int*)malloc(nbHiddenLayer*sizeof(int));
     for(int i = 0; i < nbHiddenLayer; i++){
-        nbNeuron[i] = 100;
+        nbNeuron[i] = 50;
     }
     addLayer(&NN, 1, Relu, dRelu, equiproba);
     fullyConnected(&NN, nbHiddenLayer, nbNeuron, Relu, dRelu, equiproba);
@@ -39,7 +39,7 @@ int main(){
         << (NN.output -> previous -> W)[0][0].val << endl;
     }
 
-    // Affichage du cos
+    // Affichage du x^2
     fstream fich;
     fich.open("donnees.dat", ios::out);
     for (int i = 0; i < 1000; i++){
@@ -69,7 +69,8 @@ double*** createBatch(){
         Batch[i][0] = (double*)malloc(sizeof(double));
         Batch[i][1] = (double*)malloc(sizeof(double));
         Batch[i][0][0] = 2 * 3.141593 * i / nbPointTest;
-        Batch[i][1][0] = cos(Batch[i][0][0]);
+        double incertitude = 0.5 - drand48();
+        Batch[i][1][0] = Batch[i][0][0] * Batch[i][0][0] + 2 + incertitude;
     }
     return Batch;
 }
@@ -81,7 +82,8 @@ double*** createTest(){
         Batch[i][0] = (double*)malloc(sizeof(double));
         Batch[i][1] = (double*)malloc(sizeof(double));
         Batch[i][0][0] = 2 * 3.141593 * (i + 0.5)/ nbPointTest;
-        Batch[i][1][0] = cos(Batch[i][0][0]);
+        double incertitude = 0.5 - drand48();
+        Batch[i][1][0] = Batch[i][0][0] * Batch[i][0][0] + 2 + incertitude;
     }
     return Batch;
 }

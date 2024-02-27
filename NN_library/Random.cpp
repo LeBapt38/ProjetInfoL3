@@ -4,8 +4,8 @@
 using namespace std;
 
 double equiproba(int previous, int next, double(*g)(double)){
-    srand(time(NULL));
-    double w = rand()/(1.*0x7fffffff);
+    srand48(time(NULL));
+    double w = drand48();
     if (g(-1) == 0){
         w *= 6./(next+previous);
     }else{
