@@ -11,10 +11,10 @@ void forward1Layer (layer* previous, layer* next){
     int n = next -> nbNeurons;
     int m = previous -> nbNeurons;
     for (int i = 0; i < n; i++){
-        (next -> Neurons)[i].y = (previous -> b)[i];
+        (next -> Neurons)[i].y = (previous -> b)[i].val;
         // Ajoute les valeurs transmise par les neuronnes précédents.
         for (int j = 0; j < m; j++){
-            (next -> Neurons)[i].y += (previous -> W)[i][j] * (previous -> Neurons)[j].activ((previous -> Neurons)[j].y);
+            (next -> Neurons)[i].y += (previous -> W)[i][j].val * (previous -> Neurons)[j].activ((previous -> Neurons)[j].y);
         }
     }
 }

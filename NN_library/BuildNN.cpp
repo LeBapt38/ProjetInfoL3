@@ -18,8 +18,7 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     //initialise les neurones à 0 avec la fonction d'activation choisie pour la couche.
     for(int i = 0; i < nbNeur; i++){
         (newLayer -> Neurons) [i].y =0;
-        (newLayer -> Neurons) [i].dLdy = 0;
-        (newLayer -> Neurons) [i].ydLdy = 0;
+        (newLayer -> Neurons) [i].dL = 0;
         (newLayer -> Neurons) [i].activ = g;
         (newLayer -> Neurons) [i].dActiv = dg;
     }
@@ -38,13 +37,15 @@ void addLayer(network* NN, int nbNeur, double(*g)(double), double(*dg)(double), 
         newLayer -> previous = NN->output;
         NN->output = newLayer;
         // définie W et b entre les deux couches
-        oldLayer -> b = (double*)malloc((newLayer->nbNeurons) * sizeof(double));
-        oldLayer -> W = (double**)malloc((newLayer->nbNeurons) * sizeof(double));
+        oldLayer -> b = (weight*)malloc((newLayer->nbNeurons) * sizeof(weight));
+        oldLayer -> W = (weight**)malloc((newLayer->nbNeurons) * sizeof(weight));
         for(int i = 0; i < (newLayer -> nbNeurons); i++){
-            (oldLayer -> W)[i] = (double*)malloc((oldLayer -> nbNeurons));
-            (oldLayer -> b)[i] = 0;
+            (oldLayer -> W)[i] = (weight*)malloc((oldLayer -> nbNeurons) * sizeof(weight));
+            (oldLayer -> b)[i].val = 0;
+            (oldLayer -> b)[i].dLdval = 0;
             for(int j = 0; j < (oldLayer -> nbNeurons); j++){
-                (oldLayer -> W)[i][j] = random(oldLayer -> nbNeurons, newLayer -> nbNeurons, g);
+                (oldLayer -> W)[i][j].val = random(oldLayer -> nbNeurons, newLayer -> nbNeurons, g);
+                (oldLayer -> W)[i][j].dLdval = 0;
             }
         }
     }
@@ -70,8 +71,10 @@ void destroyNN(network* NN){
         }
         free(L -> W);
         free(L -> Neurons);
+        free(L);
     }
     // Libère le dernier tableau de neuronne
     free(LL -> Neurons);
+    free(LL);
 }
 

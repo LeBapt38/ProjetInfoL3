@@ -6,6 +6,7 @@
 
 using namespace std;
 int nbPointTest = 100;
+int nbPassage = 100;
 
 double*** createBatch();
 double*** createTest();
@@ -25,12 +26,12 @@ int main(){
     addLayer(&NN, 1, Relu, dRelu, equiproba);
 
     // Apprentissage
-    double * LBatch = (double*)malloc(100*sizeof(double));
-    double * LTest = (double*)malloc(100*sizeof(double));
+    double * LBatch = (double*)malloc(nbPointTest*sizeof(double));
+    double * LTest = (double*)malloc(nbPointTest*sizeof(double));
     double*** Batch = createBatch();
     double*** Test = createTest();
     for(int i = 0; i < 100; i++){
-        trainNN0(&NN, nbPointTest, Batch, 0.0001, 100);
+        trainNN0(&NN, nbPointTest, Batch, 0.0001, nbPassage);
         LBatch[i] = testBatch(&NN, nbPointTest, Batch);
         LTest[i] = testBatch(&NN, nbPointTest, Test);
         cout << LBatch[i] << "   " << LTest[i] << endl;
@@ -53,7 +54,6 @@ int main(){
         <<"y = A[:,1]\n"
 		<<"plot(x,y)\n";
 	make_plot_py(pyth);
-	return 0;
 
     // Libérer la place allouer dynamiquement
     destroyNN(&NN);
