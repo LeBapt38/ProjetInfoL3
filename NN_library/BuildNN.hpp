@@ -16,6 +16,8 @@ typedef struct{
 typedef struct{
     double val;
     double dLdval;
+    double m;
+    double nu;
 }weight;
 
 // Structure contenant la forme d'une couche de neuronne à l'intérieur de la liste doublement chainé à la base du réseau.
@@ -34,6 +36,7 @@ typedef struct {
     layer* input;
     layer* output;
     int nbLayer;
+    int t;   //Contiendra le nombre de passage lors de l'apprentissage 
 }network;
 
 // Fonction construisant une couche du réseau
@@ -47,3 +50,5 @@ void fullyConnected(network* NN, int nbLayer, int* nbNeuron, double(*g)(double),
 
 // Libère la place mémoire prise par les variables définit à la main
 void destroyNN(network* NN);
+
+

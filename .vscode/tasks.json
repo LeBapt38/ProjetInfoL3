@@ -7,7 +7,12 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\NN_library\\*.cpp",
+                "${file}",
+                "${fileDirname}\\NN_library\\Random.cpp",
+                "${fileDirname}\\NN_library\\ActivationFun.cpp",
+                "${fileDirname}\\NN_library\\BuildNN.cpp",
+                "${fileDirname}\\NN_library\\UseNN.cpp",
+                "${fileDirname}\\NN_library\\TeachNN.cpp",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
             ],

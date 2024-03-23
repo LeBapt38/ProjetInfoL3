@@ -1,5 +1,6 @@
 #include "TeachNN.hpp"
 #include <stdlib.h>
+#include <math.h>
 
 double MSE(int nbVal, double* valNN, double* valTab){
     double x = 0;
@@ -112,10 +113,50 @@ void updateWeightCte(network* NN, double alpha){
     }
 }
 
+void updateWeightAdam(network* NN, double alpha, double beta, double gamma){
+    double epsilon = 0.000000001; //evite les divisions par zéro
+    // Evite de recalculer ces constantes à chaque fois
+    double correcGamma = 1 - pow(gamma, NN->t);
+    double correcBeta = 1 - pow(beta, NN->t);
+    layer* prev = NN -> output;
+    layer* next;
+    for(int k = 1; k < (NN -> nbLayer); k++){
+        next = prev;
+        prev = (next->previous);
+        for (int i = 0; i < next->nbNeurons; i++){
+            // La modification progressive de m permet de suivre le moment de la descente de gradient
+            (prev->b)[i].m *= gamma / correcGamma;
+            (prev->b)[i].m += ((1 - gamma) / correcGamma) * (prev->b)[i].dLdval;
+            // La modification progressive de nu permet de réduire progressivement le poid
+            (prev->b)[i].nu *= beta / correcBeta;
+            (prev->b)[i].nu += ((1 - beta)/correcBeta) * (prev->b)[i].dLdval * (prev->b)[i].dLdval;
+            // Mise à jour des poids et remise à zéro des dLdval pour le prochain passage
+            (prev->b)[i].val -= alpha * (prev->b)[i].m / (sqrt((prev->b)[i].nu) + epsilon);
+            (prev->b)[i].dLdval = 0;
+            for(int j = 0; j < prev -> nbNeurons; j++){
+                (prev -> W)[i][j].m *= gamma / correcGamma;
+                (prev->W)[i][j].m += ((1 - gamma) / correcGamma) * (prev->W)[i][j].dLdval;
+                (prev->W)[i][j].nu *= beta / correcBeta;
+                (prev->W)[i][j].nu += ((1 - beta) / correcBeta) * (prev->W)[i][j].dLdval * (prev->W)[i][j].dLdval;
+                (prev->W)[i][j].val -= alpha * (prev->W)[i][j].m / (sqrt((prev->W)[i][j].nu) + epsilon);
+                (prev->W)[i][j].dLdval = 0;
+            }
+        }
+    }
+}
+
 void trainNN0(network* NN, int sizeBatch, double*** batch, double alpha, int nbPassage){
     for(int m = 0; m < nbPassage; m++){
         backAndForthBatch(NN, sizeBatch, batch);
         updateWeightCte(NN, alpha);
     }
 }
+
+void trainNNAdam(network* NN, int sizeBatch, double*** batch, double alpha, double beta, double gamma, int nbPassage){
+    for(int m = 0; m < nbPassage; m++){
+        backAndForthBatch(NN, sizeBatch, batch);
+        updateWeightAdam(NN, alpha, beta, gamma);
+    }
+}
+
 

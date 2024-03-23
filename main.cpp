@@ -11,7 +11,6 @@ int nbPassage = 10;
 double*** createBatch();
 double*** createTest();
 
-
 int main(){
     // Création du réseau
     network NN; 
@@ -31,12 +30,15 @@ int main(){
     double*** Batch = createBatch();
     double*** Test = createTest();
     for(int i = 0; i < 1000; i++){
-        trainNN0(&NN, nbPointTest, Batch, 0.0001, nbPassage);
+        trainNNAdam(&NN, nbPointTest, Batch, 0.0001, 0.99, 0.9, nbPassage);
         LBatch[i] = testBatch(&NN, nbPointTest, Batch);
         LTest[i] = testBatch(&NN, nbPointTest, Test);
         cout << LBatch[i] << "   " << LTest[i] << "  "
         << (NN.output -> previous -> b)[0].val << "  "
         << (NN.output -> previous -> W)[0][0].val << endl;
+        if (i > 100 && abs(LBatch[i-1] - LBatch[i]) < 1e-8 && abs(LTest[i-1] - LTest[i]) < 1e-6){
+            break;            
+        }
     }
 
     // Affichage du x^2

@@ -56,7 +56,9 @@ La fonction backAllNN devra être modifié ainsi que de nombreuse autre pour pre
 
 batch[i][0] correspond à l'entrée pour la i-eme valeur du batch alors que batch[i][1] est la sortie tabulée.
 
-trainNN0 est une première version de l'aprentissage très basique. L'idée est d'entrainer le réseau de neuronne avec une vitesse d'apprentissage constante. Le choix de cette constante devient alors crucial; D'autres méthodes plus précise pourront être ajouter plus tard (adam, adagrad...).
+trainNN0 est une première version de l'aprentissage très basique. L'idée est d'entrainer le réseau de neuronne avec une vitesse d'apprentissage constante. Le choix de cette constante devient alors crucial.
+
+trainNNAdam permet d'entrainer le réseau de neuronne en utilisant la méthode Adam. L'idée est que à chaque étape, la direction du gradient est enregistrée et modifié de manière raisonnable pour éviter les oscillations dans l'espace des paramètres. Il est recommandée de donnée des valeurs de environ 0.9 pour gamma et de 0.999 pour beta. Des valeurs un peu inférieur seront surement necessaire pour que l'apprentissager ne prenne pas trop longtemps.
 
 ## Indication sur la rédaction
 L -> fonction de cout à minimiser.
