@@ -22,8 +22,13 @@ double backAndForthBatch(network* NN, int sizeBatch, double*** batch);
 // Met à jour les poids avec une vitesse d'apprentissage alpha constante
 void updateWeightCte(network* NN, double alpha);
 
+// Met à jour les poids avec la méthode Adam
+void updateWeightAdam(network* NN, double alpha, double beta, double gamma);
+
 // Première fonction permettant d'entrainer un réseau de neuronne : 
 // - alpha constant 
 // - nb de passage choisie à l'avance
 void trainNN0(network* NN, int sizeBatch, double*** batch, double alpha, int nbPassage);
 
+// Entrainement du réseau en utilisant la méthode Adam
+void trainNNAdam(network* NN, int sizeBatch, double*** batch, double alpha, double beta, double gamma, int nbPassage);

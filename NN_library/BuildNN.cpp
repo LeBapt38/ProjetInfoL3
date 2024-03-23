@@ -46,6 +46,8 @@ void addLayer(network* NN, int nbNeur, double(*g)(double), double(*dg)(double), 
             for(int j = 0; j < (oldLayer -> nbNeurons); j++){
                 (oldLayer -> W)[i][j].val = random(oldLayer -> nbNeurons, newLayer -> nbNeurons, g);
                 (oldLayer -> W)[i][j].dLdval = 0;
+                (oldLayer -> W)[i][j].m = 0;
+                (oldLayer -> W)[i][j].nu = 0;
             }
         }
     }
