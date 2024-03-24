@@ -12,14 +12,16 @@ void forward1Layer (layer* previous, layer* next){
     int m = previous -> nbNeurons;
     for (int i = 0; i < n; i++){
         (next -> Neurons)[i].y = (previous -> b)[i].val;
+        (next -> Neurons)[i].y = 0;
         // Ajoute les valeurs transmise par les neuronnes précédents.
         for (int j = 0; j < m; j++){
             (next -> Neurons)[i].y += (previous -> W)[i][j].val * (previous -> Neurons)[j].activ((previous -> Neurons)[j].y);
+            (next -> Neurons)[i].dy += (previous -> W)[i][j].val * (previous -> Neurons)[j].dActiv((previous -> Neurons)[j].y) * (previous -> Neurons)[j].dy;
         }
     }
 }
 
-void forwardPass (network* NN, double* in, double* out){
+void forwardPass (network* NN, double* in, double* out, double* dOut){
     layer* past = NULL;
     layer* future = NN->input;
     // Rentre l'entrée dans la première couche
@@ -35,6 +37,7 @@ void forwardPass (network* NN, double* in, double* out){
     //Atribue la valeur calculer à la variable de sortie
     for(int i = 0; i < (future -> nbNeurons); i++){
         out[i] = (future -> Neurons)[i].y;
+        dOut[i] = (future -> Neurons)[i].dy;
     }
 }
 

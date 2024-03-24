@@ -4,6 +4,9 @@
 // Calcule l'écart moyen quadratique entre deux tableaux de taille nbVal
 double MSE(int nbVal, double* valNN, double* valTab);
 
+// Définition de la fonction de cout dans le cas général
+double Loss(int nbVal, double* valNN, double* dValNN, double* valTab, double* in);
+
 // Donne l'erreur quadratique pour une valeur tabulé
 double test1Val(network* NN, double* in, double* outTab);
 

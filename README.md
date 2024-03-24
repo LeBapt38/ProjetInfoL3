@@ -15,21 +15,16 @@ g++ -Wall -I/usr/include/python3.10 -I/public/mphyo/bibli_fonctions main.cpp NN_
  L'objectif étant de construire une bibliothèque pour faire des réseaux de neuronnes et pas de construire un réseau en particulier, elle devra permettre :
 
  1. De modifier aisément les hyperparamètres du réseau (nombre de couche, nombre de neuronnes par couche, fonction d'activation).
- 2. De construire les architectures classiques (complètement relié, fonctions d'activation ReLU et tanh, réseau convolutif??)
- 3. Laisse la possibiliité de choisir la fonction de cout.
+ 2. De construire les architectures classiques (complètement relié, fonctions d'activation ReLU et SELU, réseau convolutif??)
 
  L'objectif principale étant de créé des PINNs, le bibliothèque devra aussi permettre :
 
  4. D'accéder aux dérivées partielles.
- 5. De donner une solution pour l'affichage graphique.
+ 5. De donner une solution pour l'affichage graphique -> pour l'instant, utilisation de biblifonction.
 
  ## Fonctionnement des fonctions
  ### Fichier main
- L'objectif de ce premier exemple est de reproduire la fonction cosinus à partir d'une base de donnée de valeurs. Pour cela, un NN prenant en argument x et sortant une valeur avec 3 couche caché de 3 neuronnes sera considéré. Les fonctions sont choisie au plus simple : 
- - Relu pour l'activation
- - Equiproba pour l'initialisation.
-
- Pour l'instant je rencontre des difficultés au niveau des résultats. Un premier soucis au niveau de la remonté de gradient à demander de changer un peu les structures mais en dehors de cela, le code fonctionne. Le problmème vient surment de la gestion des hyper paramètres. J'ai déja essayer de réajuster l'initialisation afibn que les poids ne deviennent pas négatifs (marche pas avec Relu). Le nombre de neuronne par couche a aussi du être réajusté (5 -> 100)... 
+Cette troisième version du projet correspond à l'objectif premier, entrainer des PINNs!! Le programme est pour l'instant régler pour apprendre avec uniquement l'équation différentiel (f'-f = 0 , CI f(0) = 1). Cependant, il est déjà adapter pour une fonction de cout prenant en compte des données expérimentales. 
 
  ### Fichier BuildNN
 Fichier contenant les fonctions permettant de construire le réseau de neuronne couche par couche ou de manière automatisé pour un réseau complètement connecté. 
@@ -43,22 +38,26 @@ Contient les fonctions permettant d'initialiser le poids de manière aléatoire.
 Potentiellement rajouter celle pour une distribution gaussienne.
 
 ### Fichier ActivationFun
-Contient les différentes fonctions d'activation ainsi que leur dérivées. Pour l'instant la fonction Relu est codé. Rajouter tanh...
+Contient les différentes fonctions d'activation ainsi que leur dérivées. Pour l'instant les fonctions Relu et SELU sont codées. Rajouter tanh...
 
 ### Fichier UseNN
 Contient les fonctions nécessaires pour utiliser le réseau de neuronne.
 
 ### Fichier TeachNN
-Contient les fonctions permettant de calculer l'erreur quadratique moyenne ainsi que celle permettant de modifier les poids pour apprendre.
+Contient les fonctions permettant de calculer la fonction de cout ainsi que celle permettant de modifier les poids pour apprendre.
 Les dérivées de L par rapport au poid doivent être conservé avec les poids afin de pouvoir les modifier ultérieurment. 
 
-La fonction backAllNN devra être modifié ainsi que de nombreuse autre pour prendre en compte des dérivées premières. Puis trick comme Euler pour des dérivées d'ordres plus important?
+La fonction backAllNN a été modifié (ainsi que la structure du réseau...) afin de calculer les valeurs des dérivées sans parcourir plusieur fois le réseau de neuronne. Les dérivées sont passé de neuronne en neuronne à l'aide d'une descente de gradient dtochastique. Puis trick comme Euler pour des dérivées d'ordres plus important?
+
+Est ce que cette méthode fonctione? L'idée m'est venue comme ca et n'a pas été trouvé dans une ressource extérieur. Guess will see...
 
 batch[i][0] correspond à l'entrée pour la i-eme valeur du batch alors que batch[i][1] est la sortie tabulée.
 
 trainNN0 est une première version de l'aprentissage très basique. L'idée est d'entrainer le réseau de neuronne avec une vitesse d'apprentissage constante. Le choix de cette constante devient alors crucial.
 
 trainNNAdam permet d'entrainer le réseau de neuronne en utilisant la méthode Adam. L'idée est que à chaque étape, la direction du gradient est enregistrée et modifié de manière raisonnable pour éviter les oscillations dans l'espace des paramètres. Il est recommandée de donnée des valeurs de environ 0.9 pour gamma et de 0.999 pour beta. Des valeurs un peu inférieur seront surement necessaire pour que l'apprentissager ne prenne pas trop longtemps.
+
+Les deux méthodes peuvent être utilisé pour entrainer ces réseau matrès loin la plus prométeuse.
 
 ## Indication sur la rédaction
 L -> fonction de cout à minimiser.

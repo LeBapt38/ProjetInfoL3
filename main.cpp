@@ -23,6 +23,7 @@ int main(){
     addLayer(&NN, 1, Relu, dRelu, equiproba);
     fullyConnected(&NN, nbHiddenLayer, nbNeuron, Relu, dRelu, equiproba);
     addLayer(&NN, 1, Relu, dRelu, equiproba);
+    free(nbNeuron);
 
     // Apprentissage
     double * LBatch = (double*)malloc(1000*sizeof(double));
@@ -40,6 +41,8 @@ int main(){
             break;            
         }
     }
+    free(LBatch);
+    free(LTest);
 
     // Affichage du x^2
     fstream fich;
@@ -64,15 +67,17 @@ int main(){
     return 0;
 }
 
+// Pour l'instant les valeurs précises n'importent pas mais permettra de rajoute des données "expérimentale" plus tard
 double*** createBatch(){
     double*** Batch = (double***)malloc(nbPointTest*sizeof(double**));
     for(int i = 0; i < nbPointTest; i++){
         Batch[i] = (double**)malloc(2 * sizeof(double*));
         Batch[i][0] = (double*)malloc(sizeof(double));
         Batch[i][1] = (double*)malloc(sizeof(double));
-        Batch[i][0][0] = 2 * 3.141593 * i / nbPointTest;
+        Batch[i][0][0] = 3 * i / nbPointTest;
         double incertitude = 0.5 - drand48();
-        Batch[i][1][0] = Batch[i][0][0] * Batch[i][0][0] + 2 + incertitude;
+        incertitude *= 0.2;
+        Batch[i][1][0] = exp(Batch[i][0][0]) - 1 + incertitude;
     }
     return Batch;
 }
@@ -83,9 +88,8 @@ double*** createTest(){
         Batch[i] = (double**)malloc(2 * sizeof(double*));
         Batch[i][0] = (double*)malloc(sizeof(double));
         Batch[i][1] = (double*)malloc(sizeof(double));
-        Batch[i][0][0] = 2 * 3.141593 * (i + 0.5)/ nbPointTest;
-        double incertitude = 0.5 - drand48();
-        Batch[i][1][0] = Batch[i][0][0] * Batch[i][0][0] + 2 + incertitude;
+        Batch[i][0][0] = 3 * (i + 0.5) / nbPointTest;
+        Batch[i][1][0] = exp(Batch[i][0][0]) - 1;
     }
     return Batch;
 }

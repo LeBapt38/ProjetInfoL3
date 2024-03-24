@@ -18,7 +18,9 @@ layer* buildLayer(int nbNeur, double(*g)(double), double(*dg)(double)){
     //initialise les neurones à 0 avec la fonction d'activation choisie pour la couche.
     for(int i = 0; i < nbNeur; i++){
         (newLayer -> Neurons) [i].y =0;
+        (newLayer -> Neurons) [i].dy =0;
         (newLayer -> Neurons) [i].dL = 0;
+        (newLayer -> Neurons) [i].ddL = 0;
         (newLayer -> Neurons) [i].activ = g;
         (newLayer -> Neurons) [i].dActiv = dg;
     }
