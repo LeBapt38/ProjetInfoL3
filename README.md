@@ -4,7 +4,7 @@
 g++ -Wall -I/usr/include/python3.10 -I/public/mphyo/bibli_fonctions main.cpp NN_library/*.cpp /public/mphyo/bibli_fonctions/bibli_fonctions.ar -lm -lpython3.10 -o main.exe
 
  ## Abstract
- The idea is to create a relatively simple library for Neural networks in C. The aim is to use it to solve relatively simple PDE in physics. The first version will only tackle one dimension input. Later on, a method to deal with 2D and 3D would be a nice addition.
+   The main goal of this project was to learn how to code in C and the basics behind neural networks. In order to do so, I tried to implement a really basic library for neural networks. The goal I had in mind was solving PDE's with PINN's but I only managed to approximate known function. The project was far from a failure nevertheless. I learned a lot about how to structure code, I learned to use Git and GitHub... 
 
  ## Objectif du projet
  1. Se familiariser avec le fonctionnement d'un réseau de neuronne adapté pour des approximations de fonction.
